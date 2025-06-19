@@ -1,0 +1,14 @@
+package routes
+
+import (
+	"backend-recipes/controllers"
+
+	"github.com/gin-gonic/gin"
+)
+
+func CategoryRoute(router *gin.Engine) {
+	api := router.Group("/api")
+	{
+		api.GET("/category/", controllers.GetAllCategory)
+	}
+}
