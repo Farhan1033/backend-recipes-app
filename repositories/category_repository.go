@@ -17,14 +17,6 @@ func GetAllCategory() ([]models.Category, error) {
 	return category, err
 }
 
-func GetCategoryById(id uuid.UUID) (models.Category, error) {
-	var category models.Category
-	if err := config.DB.First(&category, "id = ?", id).Error; err != nil {
-		return category, err
-	}
-	return category, nil
-}
-
 func DeleteCategory(id uuid.UUID) error {
 	return config.DB.Delete(&models.Category{}, "id = ?", id).Error
 }
