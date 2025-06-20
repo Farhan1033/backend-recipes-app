@@ -16,6 +16,7 @@ func CreateIngredient(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
+		return
 	}
 
 	ingredient.ID = uuid.New()
@@ -24,6 +25,7 @@ func CreateIngredient(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
 		})
+		return
 	}
 
 	type Response struct {
@@ -44,6 +46,7 @@ func GetAllIngredient(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
 		})
+		return
 	}
 
 	type Response struct {

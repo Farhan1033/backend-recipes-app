@@ -26,6 +26,7 @@ func main() {
 
 	routes.CategoryRoute(r)
 	routes.IngredientRoute(r)
+	routes.RecipeRouter(r)
 
 	port := os.Getenv("PORT")
 
