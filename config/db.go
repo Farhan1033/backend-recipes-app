@@ -1,6 +1,7 @@
 package config
 
 import (
+	// "backend-recipes/models"
 	"fmt"
 	"log"
 	"os"
@@ -27,14 +28,16 @@ func ConnectDatabase() {
 	timezone := os.Getenv("TIME_ZONE")
 
 	dsn := fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=%s",
-		host, user, pass, dbname, port, timezone,
+		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable TimeZone=%s",
+		host, port, user, pass, dbname, timezone,
 	)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Gagal koneksi ke database:", err)
 	}
+
+	// db.AutoMigrate(&models.Category{}, &models.Ingredient{}, &models.Recipe{}, &models.RecipeIngredient{})
 
 	DB = db
 	fmt.Println("Database terhubung dengan PostgreSQL (via .env)!")

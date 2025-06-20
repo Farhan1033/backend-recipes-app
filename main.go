@@ -12,7 +12,7 @@ import (
 func main() {
 	config.ConnectDatabase()
 
-	gin.SetMode(gin.ReleaseMode)
+	// gin.SetMode(gin.ReleaseMode)
 
 	r := gin.Default()
 
@@ -27,6 +27,8 @@ func main() {
 	routes.CategoryRoute(r)
 
 	port := os.Getenv("PORT")
+
+	fmt.Printf("Server berjalan di http://0.0.0.0:%s\n", port)
 
 	r.Run("0.0.0.0:" + port)
 }
