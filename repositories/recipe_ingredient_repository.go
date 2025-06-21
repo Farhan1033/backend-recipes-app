@@ -13,14 +13,16 @@ func GetAllRecipeIngredient() ([]models.RecipeIngredient, error) {
 	return recipeIngredient, err
 }
 
-func GetRecipeIngredientById(id uuid.UUID) (models.RecipeIngredient, error) {
-	var recipeIngredient models.RecipeIngredient
+func GetRecipeIngredientsByRecipeId(recipeId uuid.UUID) ([]models.RecipeIngredient, error) {
+	var recipeIngredients []models.RecipeIngredient
 
 	err := config.DB.
 		Preload("Recipe.Category").
 		Preload("Ingredient").
-		First(&recipeIngredient, "recipe_id = ?", id).Error
-	return recipeIngredient, err
+		Where("recipe_id = ?", recipeId).
+		Find(&recipeIngredients).Error
+
+	return recipeIngredients, err
 }
 
 func CreateRecipeIngredient(recipeIngredient []models.RecipeIngredient) error {

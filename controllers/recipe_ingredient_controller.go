@@ -65,47 +65,51 @@ func GetAllRecipeIngredient(c *gin.Context) {
 func GetRecipeIngredientById(c *gin.Context) {
 	idParam := c.Param("id")
 
-	id, err := uuid.Parse(idParam)
+	recipeId, err := uuid.Parse(idParam)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid UUID format"})
 		return
 	}
 
-	data, err := repositories.GetRecipeIngredientById(id)
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Recipe Ingredient not found"})
-		return
-	}
-
-	recipe, err := repositories.GetRecipeById(data.Recipe.ID)
+	recipe, err := repositories.GetRecipeById(recipeId)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Recipe not found"})
 		return
 	}
 
+	recipeIngredients, err := repositories.GetRecipeIngredientsByRecipeId(recipeId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch recipe ingredients"})
+		return
+	}
+
+	var ingredients []dto.IngredientInRecipe
+	for _, ri := range recipeIngredients {
+		ingredients = append(ingredients, dto.IngredientInRecipe{
+			ID:       ri.Ingredient.ID,
+			Name:     ri.Ingredient.Name,
+			Quantity: ri.Quantity,
+			Unit:     ri.Unit,
+		})
+	}
+
 	result := dto.RecipeWithIngredients{
-		ID:          data.ID,
-		RecipeId:    data.Recipe.ID,
-		Title:       data.Recipe.Title,
+		ID:          recipe.ID,
+		RecipeId:    recipe.ID,
+		Title:       recipe.Title,
 		Category:    recipe.Category.Name,
-		CookingTime: data.Recipe.CookingTime,
-		Portion:     data.Recipe.Portion,
-		Description: data.Recipe.Description,
-		Steps:       data.Recipe.Steps,
-		ImageUrl:    data.Recipe.ImageUrl,
-		CreatedAt:   data.CreatedAt.Format("2006-01-02 15:04"),
-		Ingredients: []dto.IngredientInRecipe{
-			{
-				ID:       data.Ingredient.ID,
-				Name:     data.Ingredient.Name,
-				Quantity: data.Quantity,
-				Unit:     data.Unit,
-			},
-		},
+		CookingTime: recipe.CookingTime,
+		Portion:     recipe.Portion,
+		Description: recipe.Description,
+		Steps:       recipe.Steps,
+		ImageUrl:    recipe.ImageUrl,
+		CreatedAt:   recipe.CreatedAt.Format("2006-01-02 15:04"),
+		Ingredients: ingredients,
 	}
 
 	c.JSON(http.StatusOK, result)
 }
+
 
 func CreateRecipeIngredient(c *gin.Context) {
 	var input dto.AddMultipleRecipeIngredientsRequest
