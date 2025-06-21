@@ -45,7 +45,6 @@ func UpdateRecipe(id uuid.UUID, input *models.Recipe) error {
 	recipe.Description = input.Description
 	recipe.Steps = input.Steps
 	recipe.ImageUrl = input.ImageUrl
-	recipe.CreatedAt = input.CreatedAt
 
 	return config.DB.Save(&recipe).Error
 }

@@ -12,7 +12,7 @@ import (
 func main() {
 	config.ConnectDatabase()
 
-	// gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.ReleaseMode)
 
 	r := gin.Default()
 
