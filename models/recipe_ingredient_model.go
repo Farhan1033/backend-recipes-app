@@ -13,6 +13,6 @@ type RecipeIngredient struct {
 	Recipe       Recipe     `gorm:"foreignKey:RecipeId" json:"-"`
 	Ingredient   Ingredient `gorm:"foreignKey:IngredientId" json:"-"`
 	Quantity     float64    `gorm:"type:numeric(10,2)" json:"quantity"`
-	Unit         string     `gorm:"type:char(50)" json:"unit"`
-	CreateAt     time.Time  `json:"create_at"`
+	Unit         string     `gorm:"type:varchar(50)" json:"unit"`
+	CreatedAt    time.Time  `json:"created_at"`
 }
