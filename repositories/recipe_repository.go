@@ -42,6 +42,8 @@ func UpdateRecipe(id uuid.UUID, input *models.Recipe) error {
 
 	recipe.Title = input.Title
 	recipe.CategoryId = input.CategoryId
+	recipe.CookingTime = input.CookingTime
+	recipe.Portion = input.Portion
 	recipe.Description = input.Description
 	recipe.Steps = input.Steps
 	recipe.ImageUrl = input.ImageUrl
