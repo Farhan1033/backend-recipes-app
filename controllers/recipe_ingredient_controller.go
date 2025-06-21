@@ -5,6 +5,7 @@ import (
 	"backend-recipes/models/dto"
 	"backend-recipes/repositories"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -107,30 +108,32 @@ func GetRecipeIngredientById(c *gin.Context) {
 }
 
 func CreateRecipeIngredient(c *gin.Context) {
-	var recipeIngredient models.RecipeIngredient
+	var input dto.AddMultipleRecipeIngredientsRequest
 
-	if err := c.ShouldBindJSON(&recipeIngredient); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	recipeIngredient.ID = uuid.New()
+	var data []models.RecipeIngredient
+	for _, item := range input.Ingredients {
+		data = append(data, models.RecipeIngredient{
+			ID:           uuid.New(),
+			RecipeId:     input.RecipeID,
+			IngredientId: item.IngredientID,
+			Quantity:     float64(item.Quantity),
+			Unit:         item.Unit,
+			CreatedAt:    time.Now(),
+		})
+	}
 
-	if err := repositories.CreateRecipeIngredient(&recipeIngredient); err != nil {
+	if err := repositories.CreateRecipeIngredient(data); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	type Response struct {
-		Message string `json:"message"`
-		Data    any    `json:"data"`
-	}
-
-	c.JSON(http.StatusOK, Response{
-		Message: "Berhasil membuat data",
-		Data:    recipeIngredient,
+	c.JSON(http.StatusCreated, gin.H{
+		"message": "Berhasil menambahkan ingredients",
 	})
 }
 

@@ -23,8 +23,12 @@ func GetRecipeIngredientById(id uuid.UUID) (models.RecipeIngredient, error) {
 	return recipeIngredient, err
 }
 
-func CreateRecipeIngredient(recipeIngredient *models.RecipeIngredient) error {
-	return config.DB.Create(recipeIngredient).Error
+func CreateRecipeIngredient(recipeIngredient []models.RecipeIngredient) error {
+	if len(recipeIngredient) == 0 {
+		return nil
+	}
+
+	return config.DB.Create(&recipeIngredient).Error
 }
 
 func UpdateRecipeIngredient(id uuid.UUID, input *models.RecipeIngredient) error {
