@@ -30,6 +30,9 @@ func main() {
 	routes.RecipeIngredientRouter(r)
 
 	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
 
 	fmt.Printf("Server berjalan di http://0.0.0.0:%s\n", port)
 
